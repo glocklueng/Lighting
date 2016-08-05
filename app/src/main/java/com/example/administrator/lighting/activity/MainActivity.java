@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.administrator.lighting.R;
@@ -51,6 +52,28 @@ public class MainActivity extends BaseActivity {
         mHandler = new Handler();
         initRecycler();
         initBluetooth();
+
+        findViewById(R.id.id_btn_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanLeDevice(true);
+            }
+        });
+
+        mLeDeviceListAdapter.setOnItemClickListener(new LeDeviceListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                LogUtil.d(TAG, "click item " + position);
+                BluetoothDevice bluetoothDevice = mLeDeviceListAdapter.getDevice(position);
+                LogUtil.d(TAG, bluetoothDevice.getName());
+                LogUtil.d(TAG, bluetoothDevice.getAddress());
+                Intent intent = new Intent();
+                intent.putExtra(ControlActivity.EXTRAS_DEVICE_NAME, bluetoothDevice.getName());
+                intent.putExtra(ControlActivity.EXTRAS_DEVICE_ADDRESS, bluetoothDevice.getAddress());
+                intent.setClass(MainActivity.this, ControlActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -97,6 +120,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void scanLeDevice(final boolean enable) {
+        mLeDeviceListAdapter.clear();
+        mLeDeviceListAdapter.notifyDataSetChanged();
         if (enable) {
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -104,6 +129,9 @@ public class MainActivity extends BaseActivity {
                     mScanning = false;
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     LogUtil.d(TAG, "stop scan bluetooth device");
+                    if (mLeDeviceListAdapter.getItemCount() == 0) {
+                        Toast.makeText(MainActivity.this, "未发现可用的蓝牙设备", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }, SCAN_PERIOD);
             mScanning = true;

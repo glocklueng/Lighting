@@ -19,6 +19,16 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     private ArrayList<BluetoothDevice> mLeDevices;
     private LayoutInflater mInflator;
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    private OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
     public LeDeviceListAdapter(Context context) {
         mInflator = LayoutInflater.from(context);
         mLeDevices = new ArrayList<BluetoothDevice>();
@@ -45,7 +55,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         BluetoothDevice device = mLeDevices.get(position);
         final String deviceName = device.getName();
         if (!deviceName.isEmpty()) {
@@ -54,6 +64,16 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
             holder.itemTvName.setText("未知设备");
         }
         holder.itemTvAddress.setText("设备地址：" + device.getAddress());
+        if (mOnItemClickListener != null) {
+            holder.itemCv.setBackgroundResource(R.drawable.ripple); //点击水波纹效果
+            holder.itemCv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = holder.getLayoutPosition();
+                    mOnItemClickListener.onItemClick(holder.itemCv, position);
+                }
+            });
+        }
     }
 
     @Override

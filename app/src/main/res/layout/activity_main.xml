@@ -19,10 +19,27 @@
 
     </android.support.v7.widget.CardView>
 
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="4dp"
+        android:elevation="5dp">
+
+        <Button
+            android:id="@+id/id_btn_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/btn_search_device"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@color/colorGreen" />
+
+    </android.support.v7.widget.CardView>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/id_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
 </LinearLayout>
