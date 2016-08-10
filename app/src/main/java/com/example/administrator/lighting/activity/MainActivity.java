@@ -30,6 +30,10 @@ public class MainActivity extends BaseActivity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private Handler mHandler;
     private boolean mScanning;
+
+    /**
+     * 扫描到BLE设备后回调这个类
+     */
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
@@ -60,6 +64,9 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        /**
+         * 点击item后进入相应设备的ControlActivity
+         */
         mLeDeviceListAdapter.setOnItemClickListener(new LeDeviceListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -119,6 +126,10 @@ public class MainActivity extends BaseActivity {
         recyclerView.setAdapter(mLeDeviceListAdapter);
     }
 
+    /**
+     * 扫描BLE设备
+     * @param enable
+     */
     private void scanLeDevice(final boolean enable) {
         mLeDeviceListAdapter.clear();
         mLeDeviceListAdapter.notifyDataSetChanged();
