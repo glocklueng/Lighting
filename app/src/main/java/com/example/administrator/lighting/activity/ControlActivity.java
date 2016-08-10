@@ -34,10 +34,13 @@ public class ControlActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mBluetoothLeService = ((BluetoothLeService.LocalBinder) iBinder).getService();
-            if (!mBluetoothLeService.initialize()) {
-                LogUtil.e(TAG, "Unable to initialize Bluetooth");
-                finish();
+            //检查是否能向下转型
+            if (iBinder instanceof BluetoothLeService.LocalBinder) {
+                mBluetoothLeService = ((BluetoothLeService.LocalBinder) iBinder).getService();
+                if (!mBluetoothLeService.initialize()) {
+                    LogUtil.e(TAG, "Unable to initialize Bluetooth");
+                    finish();
+                }
             }
             // Automatically connects to the device upon successful start-up initialization.
             mBluetoothLeService.connect(mDeviceAddress);
